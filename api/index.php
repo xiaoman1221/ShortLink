@@ -1,6 +1,6 @@
 <?php
-include('./api/config.php');
-include('./api/function.php');
+include('config.php');
+include('function.php');
 error_reporting(0);
 try{
     $pdo = pdoConnect();
