@@ -1,6 +1,6 @@
 <?php
-include('/var/task/user/api/config.php');
-include('/var/task/user/api/function.php');
+include('./api/config.php');
+include('./api/function.php');
 error_reporting(0);
 try{
     $pdo = pdoConnect();
