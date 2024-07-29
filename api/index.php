@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+error_reporting(0);
 // 使用绝对路径
 include(__DIR__ . '/config.php');
 
@@ -13,8 +13,8 @@ $randstr = GetRandStr($URL_SHORTENER_LENGHT);
 if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
     echo init($db);
 } elseif ($_GET['submit']) {
-    $url = pg_escape_string($_GET['submit']);
-    $query = "INSERT INTO url_data (id, url, code) VALUES (time(), '$url', '$randstr')";
+    $url = $_GET['submit'];
+    $query = "INSERT INTO url_data (id, url, code) VALUES (CURRENT_TIMESTAMP, '$url', '$randstr')";
     $result = pg_query($db, $query);
     echo "成功！您的跳转链接为 http://test.com/jump={$randstr}";
 } elseif ($_GET['jump']) {
