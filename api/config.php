@@ -13,5 +13,3 @@ $JUMP_TIME=1;
 $TITLE="云电短链";
 //生成短链的长度
 $URL_SHORTENER_LENGHT=6;
-//是否开启人机验证（注意，使用本功能，请务必开启php的GD库，当然一般默认是开启的）
-$IMAGE_VERIFICATION=true;
