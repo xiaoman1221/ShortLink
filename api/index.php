@@ -1,39 +1,33 @@
 <?php
-error_reporting(0);
-// 必须使用绝对路径
-include('/var/task/user/api/config.php');
+error_reporting(E_ALL);
+// 使用绝对路径
+include(__DIR__ . '/config.php');
+
 $db = pg_connect("host=$DB_HOST dbname=$DB_NAME user=$DB_USER password=$DB_PASS");
 if (!$db) {
-    die("无法连接到数据库");
+    die("无法连接到数据库：" . pg_last_error());
 }
+
 $randstr = GetRandStr($URL_SHORTENER_LENGHT);
 
 if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
-    // 处理初始化逻辑
-    die(init($db));
+    echo init($db);
 } elseif ($_GET['submit']) {
-    // 处理提交逻辑
-    $query = "INSERT INTO url_data (id, url, code) VALUES (time(), ?, ?)";
-    $stmt = pg_prepare($db, "insert_query", $query);
-    $result = pg_execute($db, "insert_query", [$_GET['submit'], $randstr]);
-    if ($result) {
-        echo "成功！您的跳转链接为 http://test.com/jump=" . urlencode($randstr);
-    } else {
-        echo "插入数据失败！";
-    }
+    $url = pg_escape_string($_GET['submit']);
+    $query = "INSERT INTO url_data (id, url, code) VALUES (time(), '$url', '$randstr')";
+    $result = pg_query($db, $query);
+    echo "成功！您的跳转链接为 http://test.com/jump={$randstr}";
 } elseif ($_GET['jump']) {
-    // 处理跳转逻辑
-    $query = "SELECT url FROM url_data WHERE code = ?";
-    $stmt = pg_prepare($db, "select_query", $query);
-    $result = pg_execute($db, "select_query", [$_GET['jump']]);
-    if ($result) {
-        $row = pg_fetch_assoc($result);
-        header('Location: ' . $row['url']);
-        exit;
-    } else {
-        echo "不存在此链接！";
+    $code = pg_escape_string($_GET['jump']);
+    $query = "SELECT url FROM url_data WHERE code = '$code'";
+    $result = pg_query($db, $query);
+    if (!$result) {
+        die("不存在此链接！");
     }
+    $row = pg_fetch_assoc($result);
+    header("Location: " . $row['url']);
 }
+
 function GetRandStr($length)
 {
     $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -45,7 +39,9 @@ function GetRandStr($length)
     }
     return $randstr;
 }
-function init($db) {
+
+function init($db)
+{
     $query = "CREATE TABLE IF NOT EXISTS url_data (
         id serial PRIMARY KEY,
         url text NOT NULL,
@@ -54,3 +50,4 @@ function init($db) {
     $result = pg_query($db, $query);
     return "成功初始化一个数据表，您可以开始提交链接了，注意此方法只能执行一遍！";
 }
+?>
