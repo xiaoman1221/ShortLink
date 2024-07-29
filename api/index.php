@@ -22,12 +22,12 @@ function GetRandStr($length)
     }
     return $randstr;
 }
-function init($db){
-    $query = "CREATE TABLE `url_data` (
-  `id` int NOT NULL,
-  `url` text NOT NULL,
-  `code` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;";
+function init($db) {
+    $query = "CREATE TABLE IF NOT EXISTS url_data (
+        id serial PRIMARY KEY,
+        url text NOT NULL,
+        code text NOT NULL
+    )";
     $result = pg_query($db, $query);
     return $result;
 }
