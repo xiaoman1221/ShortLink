@@ -12,8 +12,7 @@ $JUMP_TIME=1;
 //站点名称
 $TITLE="云电短链";
 //生成短链的长度
-$URL_SHORTENER_LENGHT=111;
-
+$URL_SHORTENER_LENGHT=8;
 
 $db = pg_connect("host=$DB_HOST dbname=$DB_NAME user=$DB_USER password=$DB_PASS");
 
@@ -22,7 +21,9 @@ if (!$db) {
 }
 print(GetRandStr($URL_SHORTENER_LENGHT));
 
-
+$query = "SELECT username, email FROM user";
+$result = pg_query($db, $query);
+print($result);
 
 function GetRandStr($length)
 {
