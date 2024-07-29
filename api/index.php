@@ -1,5 +1,5 @@
 <?php
-// error_reporting(0);
+error_reporting(0);
 // 使用绝对路径
 include(__DIR__ . '/config.php');
 
@@ -26,7 +26,7 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
         die("不存在此链接！");
     }
     $row = pg_fetch_assoc($result);
-    echo $row['url'];
+    // echo $row['url'];
     header("Location: " . $row['url']);
 }
 
