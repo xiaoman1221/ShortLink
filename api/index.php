@@ -17,7 +17,7 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
     $id = time();
     $query = "INSERT INTO url_data (id, url, code) VALUES ('$id', '$url', '$randstr')";
     $result = pg_query($db, $query);    
-    echo "成功！您的跳转链接为 http://test.com/jump={$randstr}";
+    echo "成功！您的跳转链接为 https://link.1v.fit/?jump={$randstr}";
 } elseif ($_GET['jump']) {
     $code = pg_escape_string($_GET['jump']);
     $query = "SELECT url FROM url_data WHERE code = '$code'";
