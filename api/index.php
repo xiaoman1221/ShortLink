@@ -1,4 +1,5 @@
 <?php
+// 必须使用绝对路径
 include('/var/task/user/api/config.php');
 $db = pg_connect("host=$DB_HOST dbname=$DB_NAME user=$DB_USER password=$DB_PASS");
 if (!$db) {
@@ -6,7 +7,9 @@ if (!$db) {
 }
 $randstr = GetRandStr($URL_SHORTENER_LENGHT);
 if ($_GET['init'] == "1145141*1"){
-    die(init());
+    die(init($db));
+}else{
+    die("输入正确的密码！");
 }
 function GetRandStr($length)
 {
@@ -19,7 +22,7 @@ function GetRandStr($length)
     }
     return $randstr;
 }
-function init(){
+function init($db){
     $query = "CREATE TABLE `url_data` (
   `id` int NOT NULL,
   `url` text NOT NULL,
