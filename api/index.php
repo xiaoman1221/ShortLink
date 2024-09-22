@@ -13,7 +13,8 @@ $randstr = GetRandStr($URL_SHORTENER_LENGTH);
 if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
     echo init($db);
 } elseif ($_GET['s']) {
-    $url = pg_escape_string($_GET['s']);
+    
+    $url = pg_escape_string('http://' + $_GET['s']);
     $id = time();
     $query = "INSERT INTO url_data (id, url, code) VALUES ('$id', '$url', '$randstr')";
     $result = pg_query($db, $query);
