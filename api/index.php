@@ -17,7 +17,7 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
     $id = time();
     $query = "INSERT INTO url_data (id, url, code) VALUES ('$id', '$url', '$randstr')";
     $result = pg_query($db, $query);
-    if ($_GET['type'] == "json"){
+    if ($_GET['type']){
         $data = array(
             'code' => 200,
             'msg' => 'OK',
