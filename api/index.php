@@ -12,8 +12,8 @@ $randstr = GetRandStr($URL_SHORTENER_LENGHT);
 
 if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
     echo init($db);
-} elseif ($_GET['submit']) {
-    $url = $_GET['submit'];
+} elseif ($_GET['s']) {
+    $url = $_GET['s'];
     $id = time();
     $query = "INSERT INTO url_data (id, url, code) VALUES ('$id', '$url', '$randstr')";
     $result = pg_query($db, $query);
@@ -25,7 +25,7 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
         )
         echo json_encode($data)
     }else{
-    echo "成功！您的跳转链接为 https://link.1v.fit/?j={$randstr}";
+        echo "成功！您的跳转链接为 https://link.1v.fit/?j={$randstr}";
     }
 } elseif ($_GET['j']) {
     $code = pg_escape_string($_GET['jump']);
