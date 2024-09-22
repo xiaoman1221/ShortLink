@@ -12,4 +12,4 @@ $JUMP_TIME=1;
 //站点名称
 $TITLE="云电短链";
 //生成短链的长度
-$URL_SHORTENER_LENGHT=8;
+$URL_SHORTENER_LENGTH=6;
