@@ -26,12 +26,12 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
             $data = array(
                 'code' => 200,
                 'msg' => 'OK',
-                'url' => "https://link.1v.fit/?j={$randstr}"
+                'url' => "https://1v.fit/?j={$randstr}"
             );
             echo json_encode($data);
         }
     } else {
-        echo "成功！您的跳转链接为 https://link.1v.fit/?j={$randstr}";
+        echo "成功！您的跳转链接为 https://1v.fit/?j={$randstr}";
     }
 } elseif ($_GET['j']) {
     $code = pg_escape_string($_GET['j']);
