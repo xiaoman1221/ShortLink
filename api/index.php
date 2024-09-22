@@ -8,36 +8,43 @@ if (!$db) {
     die("无法连接到数据库：" . pg_last_error());
 }
 
-$randstr = GetRandStr($URL_SHORTENER_LENGHT);
+$randstr = GetRandStr($URL_SHORTENER_LENGTH);
 
 if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
     echo init($db);
 } elseif ($_GET['s']) {
-    $url = $_GET['s'];
+    $url = pg_escape_string($_GET['s']);
     $id = time();
     $query = "INSERT INTO url_data (id, url, code) VALUES ('$id', '$url', '$randstr')";
     $result = pg_query($db, $query);
-    if ($_GET['t']){
-        if ($_GET['t'] == "json"){
-        $data = array(
-            'code' => 200,
-            'msg' => 'OK',
-            'url' => "https://link.1v.fit/?j={$randstr}"
-        )
-        echo json_encode($data)
-            }
-    }else{
+    if (!$result) {
+        die("数据库查询失败：" . pg_last_error());
+    }
+
+    if ($_GET['t']) {
+        if ($_GET['t'] == "json") {
+            $data = array(
+                'code' => 200,
+                'msg' => 'OK',
+                'url' => "https://link.1v.fit/?j={$randstr}"
+            );
+            echo json_encode($data);
+        }
+    } else {
         echo "成功！您的跳转链接为 https://link.1v.fit/?j={$randstr}";
     }
 } elseif ($_GET['j']) {
-    $code = pg_escape_string($_GET['jump']);
+    $code = pg_escape_string($_GET['j']);
     $query = "SELECT url FROM url_data WHERE code = '$code'";
     $result = pg_query($db, $query);
     if (!$result) {
+        die("数据库查询失败：" . pg_last_error());
+    }
+
+    $row = pg_fetch_assoc($result);
+    if (!$row) {
         die("不存在此链接！");
     }
-    $row = pg_fetch_assoc($result);
-    // echo $row['url'];
     header("Location: " . $row['url']);
 }
 
@@ -46,7 +53,7 @@ function GetRandStr($length)
     $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $len = strlen($str) - 1;
     $randstr = '';
-    for ($i = 0; $i < $length; $i++) {
+    for ($i = 0; $length > $i; $i++) {
         $num = mt_rand(0, $len);
         $randstr .= $str[$num];
     }
