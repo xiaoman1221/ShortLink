@@ -13,6 +13,11 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
 } elseif ($_GET['s']) {
     $url = pg_escape_string($_GET['s']);
     
+    // 确保 URL 包含 http 或 https 前缀
+    if (!preg_match('/^(http:\/\/|https:\/\/)/', $url)) {
+        $url = 'https://' . $url;
+    }
+    
     // 先检查 URL 是否已经存在
     $query = "SELECT code FROM url_data WHERE url = '$url'";
     $code_result = pg_query($db, $query);
@@ -21,12 +26,16 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
         // URL 已存在，获取其短链接
         $code_row = pg_fetch_assoc($code_result);
         $code = $code_row['code'];
-        $data = array(
-            'code' => 200,
-            'msg' => 'OK',
-            'url' => "https://1v.fit/?j={$code}"
-        );
-        echo json_encode($data);
+        if ($_GET['t'] && $_GET['t'] == "json") {
+            $data = array(
+                'code' => 200,
+                'msg' => 'OK',
+                'url' => "https://1v.fit/?j={$code}"
+            );
+            echo json_encode($data);
+            else{
+            echo "成功！您的跳转链接为 https://1v.fit/?j={$data}";
+        }
     } else {
         // URL 不存在，生成新的短链接
         $randstr = GetRandStr($URL_SHORTENER_LENGTH);
