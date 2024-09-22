@@ -17,13 +17,15 @@ if ($_GET['init'] == getenv("INIT_SQL_PASSWORD")) {
     $id = time();
     $query = "INSERT INTO url_data (id, url, code) VALUES ('$id', '$url', '$randstr')";
     $result = pg_query($db, $query);
-    if ($_GET['type']){
+    if ($_GET['t']){
+        if ($_GET['t'] == "json"){
         $data = array(
             'code' => 200,
             'msg' => 'OK',
             'url' => "https://link.1v.fit/?j={$randstr}"
         )
         echo json_encode($data)
+            }
     }else{
         echo "成功！您的跳转链接为 https://link.1v.fit/?j={$randstr}";
     }
